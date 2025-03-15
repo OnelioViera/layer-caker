@@ -1,5 +1,5 @@
 # SANITY.io Project
-***
+
 ## Set up a new Next.js application
 ``npx create-next-app@15 layer-caker --typescript --tailwind --eslint --app --src-dir --import-alias="@/*" --turbopack``
 ### 1.  Change directory into the project:
