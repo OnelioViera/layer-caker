@@ -10,7 +10,7 @@
 ### 3. Start the development server:
 ``npm run dev``
 ### 4. Update Tailwind CSS implementation:
-- (src/app/layout.tsx)
+(src/app/layout.tsx)
 ```
 children,
 }: Readonly<{
@@ -24,7 +24,7 @@ children,
 }
 ```
 ### 5. Update layer.tsx to remove custom fonts:
-- (src/app/layout.tsx)
+(src/app/layout.tsx)
 ```
 import "@/app/globals.css";
 
@@ -41,7 +41,7 @@ export default function RootLayout({
 }
 ```
 ### 6. Update globals.css to remove anything other than Tailwind's import:
-- (src/app/globals.css)
+(src/app/globals.css)
 ```
 @import "tailwindcss";
 ```
@@ -85,3 +85,35 @@ export const POST_QUERY = defineQuery(`*[_type == "post" && slug.current == $slu
 ***
 # Generate TypeScript Types
 ## Extracting schema
+- You're able to use the Sanity CLI from inside the Next.js application because of the sanity.cli.ts file at the root of your project.
+### 1. Run the following command in your terminal:
+`npx sanity@latest schema extract --path=./src/sanity/extract.json`
+
+Re-run this every time you modify your schema types.
+You should see a response like the one below and a newly generated extract.json file in your src/sanity directory.
+`✅ Extracted schema`
+## Generating types
+### 1. Create a new file at the root of your project:
+`(sanity-typegen.json)`
+```
+{
+  "path": "./src/**/*.{ts,tsx,js,jsx}",
+  "schema": "./src/sanity/extract.json",
+  "generates": "./src/sanity/types.ts"
+}
+```
+**The configuration here will:**
+
+- Scan the src directory for GROQ queries to create Types.
+- Additionally, use the extract.json file created during the previous task.
+- Write a new types.ts file with our other Sanity utilities.
+### 2. Run the following command in your terminal:
+`npx sanity@latest typegen generate`
+
+Re-run this every time you modify your schema types or GROQ queries.
+
+You should see a response like the one below and a newly created src/sanity/types.ts file in your project.
+`✅ Generated TypeScript types for 15 schema types and 2 GROQ queries in 1 files into: ./src/sanity/types.ts`
+## Automating TypeGen
+### 1. Update package.json scripts:
+`(package.json)`
