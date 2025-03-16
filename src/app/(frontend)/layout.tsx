@@ -1,3 +1,4 @@
+import { SanityLive } from "@/sanity/lib/live";
 import "@/app/globals.css";
 
 export default function RootLayout({
@@ -7,7 +8,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <SanityLive />
+        {children}
+      </body>
     </html>
   );
 }

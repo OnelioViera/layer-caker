@@ -144,5 +144,86 @@ src
 ### 2. Update the home page.
 - Move page.tsx into the (frontend) folder
 - Update your home page route to add basic navigation to the posts index.
-        
-        
+`src/app/(frontend)/page.tsx`    
+```
+import Link from "next/link";
+import { client } from "@/sanity/lib/client";
+import { POSTS_QUERY } from "@/sanity/lib/queries";
+
+const options = { next: { revalidate: 60 } };
+
+export default async function Page() {
+  const posts = await client.fetch(POSTS_QUERY, {}, options);
+
+  return (
+    <main className="container mx-auto grid grid-cols-1 gap-6 p-12">
+      <h1 className="text-4xl font-bold">Post index</h1>
+      <ul className="grid grid-cols-1 divide-y divide-blue-100">
+        {posts.map((post) => (
+          <li key={post._id}>
+            <Link
+              className="block p-4 hover:text-blue-500"
+              href={`/posts/${post?.slug?.current}`}
+            >
+              {post?.title}
+            </Link>
+          </li>
+        ))}
+      </ul>
+      <hr />
+      <Link href="/">&larr; Return home</Link>
+    </main>
+  );
+}
+```       
+### 3. Update the frontend layout.tsx file to include SanityLive:
+`src/app/(frontend)/layout.tsx`
+```
+import { SanityLive } from '@/sanity/lib/live'
+
+export default function FrontendLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode
+}>) {
+  return (
+    <>
+      {children}
+      <SanityLive />
+    </>
+  )
+}
+```
+### 4. Update the post index page's fetch from client to sanityFetch: 
+- Create an individual post page.
+  
+`src/app/(frontend)/posts/page.tsx`
+```
+import { sanityFetch } from "@/sanity/lib/live";
+import { POST_QUERY } from "@/sanity/lib/queries";
+import { notFound } from "next/navigation";
+import Link from "next/link";
+
+export default async function Page({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { data: post } = await sanityFetch({
+    query: POST_QUERY,
+    params: await params,
+  });
+
+  if (!post) {
+    notFound();
+  }
+
+  return (
+    <main className="container mx-auto grid grid-cols-1 gap-6 p-12">
+      <h1 className="text-4xl font-bold text-balance">{post?.title}</h1>
+      <hr />
+      <Link href="/posts">&larr; Return to index</Link>
+    </main>
+  );
+}
+```
