@@ -117,3 +117,32 @@ You should see a response like the one below and a newly created src/sanity/type
 ## Automating TypeGen
 ### 1. Update package.json scripts:
 `(package.json)`
+```
+"scripts": {
+  // ...all your other scripts
+  "predev": "npm run typegen",
+  "prebuild": "npm run typegen",
+  "typegen": "sanity schema extract --path=./src/sanity/extract.json && sanity typegen generate"
+},
+```
+You can now run both the **schema** extraction and **TypeGen** commands with one line:
+`npm run typegen`
+***
+# Fetch Sanity Content
+### 1. Open src/sanity/lib/client.ts to confirm it exists in your project.
+## Next.js App Router
+### 1. Create a new (frontend) directory and duplicate layout.tsx into it:
+`mkdir -p src/app/\(frontend\) && cp src/app/layout.tsx src/app/\(frontend\)/`
+### You should now have two layout.tsx files inside the app folder at these locations:
+
+src
+└── app
+    ├── // all other files
+    ├── layout.tsx
+    └── (frontend)
+        └── layout.tsx
+### 2. Update the home page.
+- Move page.tsx into the (frontend) folder
+- Update your home page route to add basic navigation to the posts index.
+        
+        
